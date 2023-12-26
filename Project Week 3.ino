@@ -41,18 +41,22 @@ int IN3 = A2; // LEFT BACKWARD
 int IN4 = A3; // LEFT FORWARD
 
 // Encoder sensor pins
-//int encoderA = 10;
-//int stateA;
-//int lastStateA;
-//volatile unsigned long encoderCountA = 0;
-
+int encoderA = 10;
 int encoderB = 2;
+int stateA;
+int lastStateA;
 int stateB;
 int lastStateB;
+volatile unsigned long encoderCountA = 0;
 volatile unsigned long encoderCountB = 0;
+volatile unsigned long totalEncoderCount = 0;
+
+volatile unsigned long encoderCountA1= 0;
 
 float circumference = 21.2; //cm
 float distanceForward = 0;
+float distanceForward1 = 0;
+float distanceForward2 = 0;
 float distanceMoveUpRamp = 0;
 float distanceAccelerate = 0;
 float distanceTask2 = 0;
@@ -95,8 +99,11 @@ void setup()
   //pinMode(encoderA, INPUT_PULLUP);
   //lastStateA=digitalRead(encoderA);
 
+  pinMode(encoderA, INPUT);
   pinMode(encoderB, INPUT);
+  pinMode(encoderA, INPUT_PULLUP);
   pinMode(encoderB, INPUT_PULLUP);
+  lastStateA=digitalRead(encoderA);
   lastStateB=digitalRead(encoderB);
 
   lcd.begin(16, 2); // Initialize a 16x2 LCD
@@ -113,13 +120,25 @@ float moveForward(int once)
 
   if (once==0) //Already pass the ramp
   {
+    stateA=digitalRead(encoderA);
+    if (stateA!=lastStateA)
+    {
+      encoderCountA++;
+    }
+    stateA=lastStateA;
+  
+    distanceForward1=circumference*(float)(encoderCountA)/40.0;
+
     stateB=digitalRead(encoderB);
     if (stateB!=lastStateB)
     {
       encoderCountB++;
     }
     stateB=lastStateB;
-    distanceForward=circumference*(float)(encoderCountB)/30.0;
+  
+    distanceForward2=circumference*(float)(encoderCountB)/40.0;
+    
+    distanceForward= (distanceFoward1+distanceFoward2)/2;
     lcd.clear();
     lcd.setCursor(0,0);
     lcd.print("Distance travelled: ");
