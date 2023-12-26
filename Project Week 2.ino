@@ -230,7 +230,7 @@ void loop()
 
   while(x==0)
   {
-    distance=distance1+distanceForward+distanceRight+distanceLeft;
+    distance=distance1+distanceForward;
     lcd.clear();
     lcd.setCursor(0, 0);
     lcd.print("Distance: ");
