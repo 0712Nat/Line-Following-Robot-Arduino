@@ -20,14 +20,6 @@ double x;
 double y;
 double z;
 
-/*
-// Ultrasonic sensor
-const int trigPin = 2;
-const int echoPin = 10;
-long duration;
-int distance;
-*/
-
 // Motor control pins
 int RIGHT_SENSOR = 12;
 int LEFT_SENSOR = 13;
@@ -78,13 +70,7 @@ void setup()
 
   startTime = millis();
 
-  /*
-  //Ultrasonic
-  pinMode(trigPin, OUTPUT); // Sets the trigPin as an Output
-  pinMode(echoPin, INPUT); // Sets the echoPin as an Input
-  */
-
-  //Motor
+    //Motor
   pinMode(RIGHT_SENSOR, INPUT);
   pinMode(LEFT_SENSOR, INPUT);
   pinMode(ENA, OUTPUT);
@@ -95,10 +81,6 @@ void setup()
   pinMode(IN4, OUTPUT);
 
   //Encoder
-  //pinMode(encoderA, INPUT);
-  //pinMode(encoderA, INPUT_PULLUP);
-  //lastStateA=digitalRead(encoderA);
-
   pinMode(encoderA, INPUT);
   pinMode(encoderB, INPUT);
   pinMode(encoderA, INPUT_PULLUP);
@@ -165,13 +147,23 @@ float moveForward(int once)
   
   else
   {
+    stateA=digitalRead(encoderA);
+    if (stateA!=lastStateA)
+    {
+      encoderCountA++;
+    }
+    stateA=lastStateA;
+    distanceForward1=circumference*(float)(encoderCountA)/40.0;
+
     stateB=digitalRead(encoderB);
     if (stateB!=lastStateB)
     {
       encoderCountB++;
     }
     stateB=lastStateB;
-    distanceForward=circumference*(float)(encoderCountB)/30.0;
+    distanceForward2=circumference*(float)(encoderCountB)/40.0;
+    
+    distanceForward= (distanceFoward1+distanceFoward2)/2;
     
     return (distanceForward);
   }
@@ -193,13 +185,23 @@ float moveUpRamp(){
     lcd.print("Ramp angle: ");
     lcd.print(angleX);
 
+    stateA=digitalRead(encoderA);
+    if (stateA!=lastStateA)
+    {
+      encoderCountA++;
+    }
+    stateA=lastStateA;
+    distanceForward1=circumference*(float)(encoderCountA)/40.0;
+
     stateB=digitalRead(encoderB);
     if (stateB!=lastStateB)
     {
       encoderCountB++;
     }
     stateB=lastStateB;
-    distanceMoveUpRamp=circumference*(float)(encoderCountB)/30.0;
+    distanceForward2=circumference*(float)(encoderCountB)/40.0;
+    
+    distanceMoveUpRamp= (distanceFoward1+distanceFoward2)/2;
   }
   return (distanceMoveUpRamp);
 }
@@ -283,37 +285,6 @@ double readMPU()
   return (x);
 }
 
-/*
-double readUltrasonic()
-{
-  // Clears the trigPin
-  digitalWrite(trigPin, LOW);
-  delayMicroseconds(2);
-
-  // Sets the trigPin on HIGH state for 10 micro seconds
-  digitalWrite(trigPin, HIGH);
-  delayMicroseconds(10);
-  digitalWrite(trigPin, LOW);
-
-  // Reads the echoPin, returns the sound wave travel time in microseconds
-  duration = pulseIn(echoPin, HIGH);
-
-  // Calculating the distance
-  distance = duration * 0.0343 / 2;
-
-  // Prints the distance on the Serial Monitor
-  Serial.print("Distance: ");
-  Serial.println(distance);
-
-  lcd.clear();
-  lcd.setCursor(0, 0);
-  lcd.print("HRSr04: ");
-  lcd.print(distance);
-
-  return(distance);
-}
-*/
-
 void stop4s()
 {
   unsigned long stopStart = millis();
@@ -337,14 +308,23 @@ void loop()
     digitalWrite(IN3, LOW);
     digitalWrite(IN4, HIGH);
 
+    stateA=digitalRead(encoderA);
+    if (stateA!=lastStateA)
+    {
+      encoderCountA++;
+    }
+    stateA=lastStateA;
+    distanceForward1=circumference*(float)(encoderCountA)/40.0;
+
     stateB=digitalRead(encoderB);
     if (stateB!=lastStateB)
     {
       encoderCountB++;
     }
     stateB=lastStateB;
-    distanceAccelerate=circumference*(float)(encoderCountB)/30.0;
-
+    distanceForward2=circumference*(float)(encoderCountB)/40.0;
+    
+    distanceAccelerate= (distanceFoward1+distanceFoward2)/2;
     lcd.clear();
     lcd.setCursor(0,0);
     lcd.print("Distance: ");
