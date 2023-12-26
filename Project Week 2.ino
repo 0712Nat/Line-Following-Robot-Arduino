@@ -38,6 +38,8 @@ unsigned long duration = 500; // 1000 milliseconds = 1 second
 float distance = 0;
 float distance1 = 0;
 float distanceForward = 0;
+float distanceForwardA = 0;
+float distanceForwardB = 0;
 
 void setup() {
   Serial.begin(9600);
@@ -89,7 +91,7 @@ float moveForward()
   }
   stateA=lastStateA;
   
-  distanceForward=circumference*(float)(encoderCountA)/40.0;
+  distanceForwardA=circumference*(float)(encoderCountA)/40.0;
   Serial.print("Encoder A: ");
   Serial.println(encoderCountA);
 
@@ -100,11 +102,11 @@ float moveForward()
   }
   stateB=lastStateB;
   
-  distanceForward=circumference*(float)(encoderCountB)/40.0;
+  distanceForwardB=circumference*(float)(encoderCountB)/40.0;
   Serial.print("Encoder B: ");
   Serial.println(encoderCountB);
   
-  return (distanceForward/2);
+  return ((distanceForwardA + distanceFowardB)/2);
 }
 
 float turnRight() 
