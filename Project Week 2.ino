@@ -100,7 +100,7 @@ float moveForward()
   }
   stateB=lastStateB;
   
-  distanceForward=circumference*(float)(encoderCountA)/40.0;
+  distanceForward=circumference*(float)(encoderCountB)/40.0;
   Serial.print("Encoder B: ");
   Serial.println(encoderCountB);
   
