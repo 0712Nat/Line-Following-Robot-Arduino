@@ -212,12 +212,12 @@ void loop()
       
       else if (rightSensorValue == HIGH && leftSensorValue == LOW) 
       {
-        distanceLeft = turnLeft();
+        turnLeft();
       } 
      
       else if (rightSensorValue == LOW && leftSensorValue == HIGH)           
       {
-        distanceRight = turnRight();
+        turnRight();
       } 
       
       else 
